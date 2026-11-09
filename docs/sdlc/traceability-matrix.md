@@ -9,11 +9,11 @@ Built from recorded links, not written by a model: requirement key → plan item
 <!-- sdlc:auto:start matrix -->
 | Requirement | Epic | Title | Plan items | Sprint | Design | Code | Commits | Ticket | Tests | AC tests | Deployed |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| US-001 | EPIC-001 | Sign in with email and password | US-001 | 1 | GET /auth/me, POST /auth/login, api, db, sessions, users, web | backend/app/config.py, backend/app/main.py, backend/app/models.py, backend/app/routers/auth.py, backend/app/schemas.py +11 more | 60cef90 | delivered | succeeded | 4/4 tested · 0/4 passing | — |
-| US-002 | EPIC-001 | Sign out and session expiry | US-002 | 1 | POST /auth/logout, api, sessions, users, web | — | 60cef90 | delivered | not run | 3/3 tested · 2/3 passing | — |
-| US-003 | EPIC-001 | Passwords stored securely | US-003 | 1 | api, db, users | — | 60cef90 | delivered | not run | 2/2 tested · 2/2 passing | — |
+| US-001 | EPIC-001 | Sign in with email and password | US-001 | 1 | GET /auth/me, POST /auth/login, api, db, sessions, users, web | backend/app/config.py, backend/app/main.py, backend/app/models.py, backend/app/routers/auth.py, backend/app/schemas.py +11 more | 60cef90 | delivered | succeeded | 4/4 tested · 0/4 passing | d02e9ec1635d |
+| US-002 | EPIC-001 | Sign out and session expiry | US-002 | 1 | POST /auth/logout, api, sessions, users, web | — | 60cef90 | delivered | not run | 3/3 tested · 2/3 passing | d02e9ec1635d |
+| US-003 | EPIC-001 | Passwords stored securely | US-003 | 1 | api, db, users | — | 60cef90 | delivered | not run | 2/2 tested · 2/2 passing | d02e9ec1635d |
 | US-004 | EPIC-001 | Reset a forgotten password by email | US-004 | 2 | POST /auth/password-reset/confirm, POST /auth/password-reset/request, api, db, email, password_reset_tokens, users, web | — | — | not started | not run | 0/5 tested · 0/5 passing | — |
-| US-005 | EPIC-002 | Finance creates user accounts | US-005 | 1 | GET /users, POST /users, api, db, users, web | — | — | failed | not run | 0/4 tested · 0/4 passing | — |
+| US-005 | EPIC-002 | Finance creates user accounts | US-005 | 1 | GET /users, POST /users, api, db, users, web | — | — | failed | not run | 0/4 tested · 0/4 passing | d02e9ec1635d |
 | US-006 | EPIC-002 | Finance changes a user's manager or role | US-006 | 1 | PATCH /users/{id}, api, users, web | — | — | skipped | not run | 0/2 tested · 0/2 passing | — |
 | US-007 | EPIC-002 | Finance deactivates users | US-007 | 2 | POST /users/{id}/deactivate, POST /users/{id}/reactivate, api, db, sessions, users, web | — | — | not started | not run | 0/2 tested · 0/2 passing | — |
 | US-008 | EPIC-002 | Role-based visibility of claims | US-008 | 3 | GET /claims, GET /claims/{id}, api, claims, db, users | — | — | not started | not run | 0/4 tested · 0/4 passing | — |
@@ -30,7 +30,7 @@ Built from recorded links, not written by a model: requirement key → plan item
 | US-019 | EPIC-005 | Resubmit a rejected claim | US-019 | 5 | POST /claims/{id}/submit, api, claim_decisions, claims, web | — | — | not started | not run | 0/2 tested · 0/2 passing | — |
 | US-020 | EPIC-005 | Finance marks approved claims as paid | US-020 | 5 | POST /claims/{id}/mark-paid, api, claim_decisions, claims, web | — | — | not started | not run | 0/4 tested · 0/4 passing | — |
 | US-021 | EPIC-005 | Approval queues | US-021 | 4 | GET /approvals/queue, api, claims, users, web | — | — | not started | not run | 0/2 tested · 0/2 passing | — |
-| US-022 | EPIC-006 | Seeded expense categories | US-022 | 1 | GET /categories, api, categories, db | — | — | failed | not run | 0/1 tested · 0/1 passing | — |
+| US-022 | EPIC-006 | Seeded expense categories | US-022 | 1 | GET /categories, api, categories, db | — | — | failed | not run | 0/1 tested · 0/1 passing | d02e9ec1635d |
 | US-023 | EPIC-006 | Finance manages categories and limits | US-023 | 5 | PATCH /categories/{id}, POST /categories, api, categories, web | — | — | not started | not run | 0/4 tested · 0/4 passing | — |
 | US-024 | EPIC-006 | Flag over-limit lines for approvers | US-024 | 5 | GET /claims/{id}, api, categories, claim_lines, web | — | — | not started | not run | 0/3 tested · 0/3 passing | — |
 | US-025 | EPIC-007 | Employee dashboard of own claims by status | US-025 | 6 | GET /dashboard/me, api, claim_lines, claims, web | — | — | not started | not run | 0/2 tested · 0/2 passing | — |

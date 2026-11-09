@@ -21,7 +21,7 @@ Out of scope: currency conversion, mileage, card feeds, accounting integrations.
 
 Stack: React, FastAPI, PostgreSQL, S3 for receipts, on AWS. English only,
 
-**Documentation version:** v5
+**Documentation version:** v6
 <!-- sdlc:auto:end overview -->
 
 ## Contents
@@ -41,11 +41,11 @@ Stack: React, FastAPI, PostgreSQL, S3 for receipts, on AWS. English only,
 | [Sprint plan](development/sprint-plan.md) | 6 sprints |
 | [Developer guide](development/developer-guide.md) | generated |
 | [API reference](development/api-reference.md) | 4 routes |
-| [Test report](testing/test-report.md) | not run yet |
+| [Test report](testing/test-report.md) | running |
 | [Tests](testing/test-cases.md) | 34 tests |
 | [Deployment guide](deployment/deployment-guide.md) | deployed |
 | [Runbook](deployment/runbook.md) | deployed |
-| [Release notes](deployment/release-notes.md) | 1 release |
+| [Release notes](deployment/release-notes.md) | 2 releases |
 | [Traceability matrix](traceability-matrix.md) | 29 requirements |
-| [Changelog](CHANGELOG.md) | 5 versions |
+| [Changelog](CHANGELOG.md) | 6 versions |
 <!-- sdlc:auto:end contents -->
