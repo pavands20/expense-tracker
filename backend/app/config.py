@@ -24,6 +24,13 @@ AWS_REGION: str | None = os.getenv("AWS_REGION") or None
 BOOTSTRAP_ADMIN_EMAIL: str | None = os.getenv("BOOTSTRAP_ADMIN_EMAIL") or None
 BOOTSTRAP_ADMIN_PASSWORD: str | None = os.getenv("BOOTSTRAP_ADMIN_PASSWORD") or None
 
+# Session lifetime in minutes.
+SESSION_LIFETIME_MINUTES: int = int(os.getenv("SESSION_LIFETIME_MINUTES", "480"))
+
+# Initial Finance admin (falls back to the platform's BOOTSTRAP_ADMIN_* names).
+SEED_ADMIN_EMAIL: str | None = os.getenv("SEED_ADMIN_EMAIL") or BOOTSTRAP_ADMIN_EMAIL
+SEED_ADMIN_PASSWORD: str | None = os.getenv("SEED_ADMIN_PASSWORD") or BOOTSTRAP_ADMIN_PASSWORD
+
 # Password-reset email (SES via SMTP).
 SMTP_HOST: str | None = os.getenv("SMTP_HOST") or None
 SMTP_PORT: int = int(os.getenv("SMTP_PORT", "587"))

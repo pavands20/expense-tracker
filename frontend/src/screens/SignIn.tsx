@@ -4,6 +4,8 @@ import React from "react";
 
 import { brand } from "@/lib/brand";
 import { useNavigate } from "@/lib/navigate";
+import { ApiError } from "@/lib/api";
+import { login } from "@/lib/auth";
 
 const PRODUCT = "Expense Tracker";
 const SCREEN = "Sign in";
@@ -13,7 +15,8 @@ export default function Screen() {
   const navigate = useNavigate();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const [status, setStatus] = React.useState("");
+  const [error, setError] = React.useState("");
+  const status = "";
   const [forgotHint, setForgotHint] = React.useState(false);
   const glass = {
     backgroundColor: "rgba(255,255,255,0.07)",
@@ -73,10 +76,26 @@ export default function Screen() {
         ) : (
           <form
             className="mt-8 space-y-4"
-            onSubmit={(e) => {
+            onSubmit={async (e) => {
               e.preventDefault();
+              setError("");
+              try {
+                await login(email, password);
+                navigate("dashboard");
+              } catch (err) {
+                setError(
+                  err instanceof ApiError && err.status === 401
+                    ? "Invalid email or password"
+                    : "Something went wrong. Please try again.",
+                );
+              }
             }}
           >
+            {error ? (
+              <p role="alert" className="text-sm font-semibold" style={{ color: brand.accentColor }}>
+                {error}
+              </p>
+            ) : null}
             <label htmlFor="tech-email" className="sr-only">
               Email
             </label>
@@ -108,10 +127,6 @@ export default function Screen() {
             <button
               type="submit"
               data-wf="b-2-0"
-              onClick={(e) => {
-                if (e.currentTarget.form && e.currentTarget.form.checkValidity())
-                  navigate("dashboard");
-              }}
               className="h-12 w-full text-sm font-bold text-white transition-transform hover:scale-[1.02]"
               style={{
                 background: `linear-gradient(90deg, ${brand.primaryColor}, ${brand.accentColor})`,
@@ -137,25 +152,6 @@ export default function Screen() {
             ) : null}
           </form>
         )}
-        <div className="mt-6 grid grid-cols-2 gap-3">
-          {["Google", "Apple"].map((p) => (
-            <button
-              key={p}
-              type="button"
-              onClick={() => setStatus(`Continuing with ${p}…`)}
-              className="h-11 text-sm font-semibold hover:bg-white/10"
-              style={glass}
-            >
-              {p}
-            </button>
-          ))}
-        </div>
-        <p className="mt-8 text-center text-sm text-white/60">
-          New to {PRODUCT}?{" "}
-          <button type="button" className="font-bold" style={{ color: brand.accentColor }}>
-            Create account
-          </button>
-        </p>
       </main>
     </div>
   );

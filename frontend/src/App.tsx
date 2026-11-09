@@ -1,5 +1,13 @@
-import { NavLink, Navigate, Outlet, Route, Routes } from "react-router-dom";
+import {
+  NavLink,
+  Navigate,
+  Outlet,
+  Route,
+  Routes,
+  useNavigate as useRouterNavigate,
+} from "react-router-dom";
 
+import { logout, useUser } from "@/lib/auth";
 import { Icons } from "@/lib/icons";
 import SignIn from "@/screens/SignIn";
 import Dashboard from "@/screens/Dashboard";
@@ -16,6 +24,9 @@ const navLinkClass = ({ isActive }: { isActive: boolean }) =>
 
 // The app's menu, drawn around every screen except the ones routed outside it below.
 function AppShellLayout() {
+  const user = useUser();
+  const navigate = useRouterNavigate();
+  if (!user) return <Navigate to="/sign-in" replace />;
   return (
     <div className="flex min-h-screen">
       <aside
@@ -40,11 +51,23 @@ function AppShellLayout() {
             <Icons.Menu size={16} />
             {"My claims"}
           </NavLink>
-          <NavLink to="/users" className={navLinkClass}>
-            <Icons.User size={16} />
-            {"Users"}
-          </NavLink>
+          {user.role === "Finance" ? (
+            <NavLink to="/users" className={navLinkClass}>
+              <Icons.User size={16} />
+              {"Users"}
+            </NavLink>
+          ) : null}
         </nav>
+        <button
+          type="button"
+          className="mt-4 w-full px-3 py-2 text-left text-sm font-medium text-[var(--brand-fg-muted)]"
+          onClick={async () => {
+            await logout();
+            navigate("/sign-in", { replace: true });
+          }}
+        >
+          {"Sign out"}
+        </button>
       </aside>
       <main className="flex-1 overflow-auto">
         <Outlet />

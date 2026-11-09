@@ -49,6 +49,21 @@ export function clearSessionToken(): void {
   }
 }
 
+export class ApiError extends Error {
+  status: number;
+  detail: unknown;
+  constructor(message: string, status: number, detail: unknown) {
+    super(message);
+    this.status = status;
+    this.detail = detail;
+  }
+}
+
+let unauthorizedListener: (() => void) | null = null;
+export function onUnauthorized(listener: (() => void) | null): void {
+  unauthorizedListener = listener;
+}
+
 export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
   const bearer = getSessionToken() ?? API_SECRET_KEY;
   // Join with exactly one slash: API_BASE_URL is baked with a trailing slash (the API
@@ -63,7 +78,21 @@ export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> 
     },
   });
   if (!response.ok) {
-    throw new Error(`${init?.method ?? "GET"} ${path} failed: ${response.status}`);
+    let detail: unknown = null;
+    try {
+      detail = ((await response.json()) as { detail?: unknown }).detail ?? null;
+    } catch {
+      // Body absent or not JSON.
+    }
+    if (response.status === 401 && path !== "/auth/login") {
+      clearSessionToken();
+      unauthorizedListener?.();
+    }
+    throw new ApiError(
+      `${init?.method ?? "GET"} ${path} failed: ${response.status}`,
+      response.status,
+      detail,
+    );
   }
   return response.status === 204 ? (undefined as T) : ((await response.json()) as T);
 }
