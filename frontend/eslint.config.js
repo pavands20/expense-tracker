@@ -27,6 +27,11 @@ export default tseslint.config(
     // Generated design screens carry `@ts-nocheck`: they are written under the
     // design phase's JS runtime contract, not as hand-written TypeScript.
     files: ["src/screens/**"],
-    rules: { "@typescript-eslint/ban-ts-comment": "off" },
+    linterOptions: { reportUnusedDisableDirectives: "off" },
+    rules: {
+      "@typescript-eslint/ban-ts-comment": "off",
+      // Generated screens use short-circuit expressions as statements.
+      "@typescript-eslint/no-unused-expressions": "off",
+    },
   },
 );

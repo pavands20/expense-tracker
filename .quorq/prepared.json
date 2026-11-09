@@ -1,0 +1,54 @@
+{
+  "key": {
+    "app_design_id": "a8917742-6dd3-4571-8618-a01f3f4cb04e",
+    "app_design_version": 1,
+    "architecture_document_id": "6470978f-528c-4f07-b28a-d2baf6dc3cb0",
+    "architecture_version": 1
+  },
+  "outcome": "prepared",
+  "packages": [
+    {
+      "ecosystem": "pypi",
+      "installed_version": "25.1.0",
+      "name": "argon2-cffi",
+      "status": "installed",
+      "version": ">=23.1.0"
+    },
+    {
+      "ecosystem": "pypi",
+      "installed_version": "0.0.33",
+      "name": "python-multipart",
+      "status": "installed",
+      "version": ">=0.0.9"
+    },
+    {
+      "ecosystem": "pypi",
+      "installed_version": "1.2.0",
+      "name": "filetype",
+      "status": "installed",
+      "version": ">=1.2.0"
+    },
+    {
+      "ecosystem": "pypi",
+      "installed_version": "1.43.126",
+      "name": "boto3",
+      "status": "installed",
+      "version": ""
+    },
+    {
+      "ecosystem": "pypi",
+      "installed_version": "2.3.0",
+      "name": "email-validator",
+      "status": "installed",
+      "version": ">=2.0.0"
+    },
+    {
+      "ecosystem": "npm",
+      "error": "already provided by the scaffold",
+      "name": "react-router",
+      "status": "skipped",
+      "version": ""
+    }
+  ],
+  "prepared_by_run": "91771be8-f0cc-4133-b805-135565999933"
+}
