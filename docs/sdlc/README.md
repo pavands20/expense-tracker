@@ -21,7 +21,7 @@ Out of scope: currency conversion, mileage, card feeds, accounting integrations.
 
 Stack: React, FastAPI, PostgreSQL, S3 for receipts, on AWS. English only,
 
-**Documentation version:** v4
+**Documentation version:** v5
 <!-- sdlc:auto:end overview -->
 
 ## Contents
@@ -31,7 +31,7 @@ Stack: React, FastAPI, PostgreSQL, S3 for receipts, on AWS. English only,
 |---|---|
 | [Requirements](requirements/README.md) | v1 approved |
 | [Architecture](architecture/README.md) | 24 entries |
-| [Development](development/README.md) | 16 entries |
+| [Development](development/README.md) | 17 entries |
 | [Testing](testing/README.md) | 0 entries |
 | [Deployment](deployment/README.md) | 3 entries |
 | [Maintenance](maintenance/README.md) | 0 entries |
@@ -40,12 +40,12 @@ Stack: React, FastAPI, PostgreSQL, S3 for receipts, on AWS. English only,
 | [Decisions (ADRs)](architecture/adr/README.md) | 6 decisions |
 | [Sprint plan](development/sprint-plan.md) | 6 sprints |
 | [Developer guide](development/developer-guide.md) | generated |
-| [API reference](development/api-reference.md) | 1 route |
+| [API reference](development/api-reference.md) | 4 routes |
 | [Test report](testing/test-report.md) | not run yet |
-| [Tests](testing/test-cases.md) | 0 tests |
+| [Tests](testing/test-cases.md) | 34 tests |
 | [Deployment guide](deployment/deployment-guide.md) | deployed |
 | [Runbook](deployment/runbook.md) | deployed |
 | [Release notes](deployment/release-notes.md) | 1 release |
 | [Traceability matrix](traceability-matrix.md) | 29 requirements |
-| [Changelog](CHANGELOG.md) | 4 versions |
+| [Changelog](CHANGELOG.md) | 5 versions |
 <!-- sdlc:auto:end contents -->

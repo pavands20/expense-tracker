@@ -5,7 +5,10 @@
 <!-- sdlc:auto:start endpoints -->
 | Method | Path | Handler | Source | Summary |
 |---|---|---|---|---|
-| GET | /health | health | `backend/app/main.py:57` | Liveness probe, and the only route here that is not a stub. |
+| POST | /auth/login | login | `backend/app/routers/auth.py:23` | — |
+| POST | /auth/logout | logout | `backend/app/routers/auth.py:33` | — |
+| GET | /auth/me | me | `backend/app/routers/auth.py:43` | — |
+| GET | /health | health | `backend/app/main.py:64` | Liveness probe, and the only route here that is not a stub. |
 <!-- sdlc:auto:end endpoints -->
 
 <!-- sdlc:auto:start drift -->
@@ -15,7 +18,6 @@
 - DELETE /claims/{id}/lines/{line_id}
 - DELETE /claims/{id}/lines/{line_id}/receipt
 - GET /approvals/queue
-- GET /auth/me
 - GET /categories
 - GET /claims
 - GET /claims/{id}
@@ -28,8 +30,6 @@
 - PATCH /claims/{id}
 - PATCH /claims/{id}/lines/{line_id}
 - PATCH /users/{id}
-- POST /auth/login
-- POST /auth/logout
 - POST /auth/password-reset/confirm
 - POST /auth/password-reset/request
 - POST /categories
@@ -46,5 +46,5 @@
 <!-- sdlc:auto:end drift -->
 
 <!-- sdlc:auto:start source -->
-Generated from commit `27b3f70`
+Generated from commit `d02e9ec`
 <!-- sdlc:auto:end source -->
