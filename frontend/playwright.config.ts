@@ -39,7 +39,7 @@ export default defineConfig({
           // Applies the Alembic migrations to DATABASE_URL, then serves the API. Its
           // packages are in backend/.venv (installed before the run).
           command:
-            "cd ../backend && .venv/bin/alembic upgrade head && .venv/bin/python -m uvicorn app.main:app --host 127.0.0.1 --port 8000",
+            "cd ../backend && { [ ! -x .venv/bin/alembic ] || .venv/bin/alembic upgrade head; } && .venv/bin/python -m uvicorn app.main:app --host 127.0.0.1 --port 8000",
           url: "http://127.0.0.1:8000/health",
           reuseExistingServer: !process.env.CI,
           timeout: 180_000,
