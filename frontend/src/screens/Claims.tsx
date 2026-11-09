@@ -10,32 +10,135 @@ import { useNavigate } from "@/lib/navigate";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const { Button, Switch, Table, THead, TBody, TR, TH, TD, Empty } = UI;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const { Plus, Check, ChevronRight, Bell, Home, Clock, Edit, Filter, ArrowLeft, ArrowRight, AlertCircle, CheckCircle } = Icons;
+const {
+  Plus,
+  Check,
+  ChevronRight,
+  Bell,
+  Home,
+  Clock,
+  Edit,
+  Filter,
+  ArrowLeft,
+  ArrowRight,
+  AlertCircle,
+  CheckCircle,
+} = Icons;
 
 const CLAIMS = [
-  { id: 'CLM-0151', title: 'Offsite supplies — Bristol away day', date: '2026-11-08', lines: 1, total: 58.0, status: 'Draft' },
-  { id: 'CLM-0150', title: 'Printer toner and stationery', date: '2026-11-07', lines: 3, total: 46.85, status: 'Submitted' },
-  { id: 'CLM-0148', title: 'Lisbon client workshop', date: '2026-11-06', lines: 3, total: 842.3, status: 'Submitted' },
-  { id: 'CLM-0146', title: 'Manchester supplier visit', date: '2026-11-04', lines: 2, total: 184.6, status: 'Draft', returned: 'Marcus Bell: please attach the hotel receipt for 2 Nov, then resubmit.' },
-  { id: 'CLM-0144', title: 'Team lunch — Q4 planning', date: '2026-11-03', lines: 1, total: 126.4, status: 'Manager approved' },
-  { id: 'CLM-0139', title: 'Standing desk and monitor arm', date: '2026-10-29', lines: 2, total: 389.98, status: 'Approved' },
-  { id: 'CLM-0136', title: 'Train to Leeds — Northern roadshow', date: '2026-10-24', lines: 4, total: 231.15, status: 'Paid' },
-  { id: 'CLM-0131', title: 'Conference ticket — Product Summit', date: '2026-10-17', lines: 1, total: 495.0, status: 'Paid' },
-  { id: 'CLM-0129', title: 'Client dinner — Halden account', date: '2026-10-14', lines: 1, total: 168.75, status: 'Approved' },
-  { id: 'CLM-0124', title: 'Taxi receipts, October', date: '2026-10-09', lines: 5, total: 97.2, status: 'Paid' },
-  { id: 'CLM-0120', title: 'USB-C dock for home office', date: '2026-10-02', lines: 1, total: 74.99, status: 'Manager approved' },
-  { id: 'CLM-0112', title: 'Airport transfers — Edinburgh', date: '2026-09-26', lines: 2, total: 112.4, status: 'Paid' },
+  {
+    id: "CLM-0151",
+    title: "Offsite supplies — Bristol away day",
+    date: "2026-11-08",
+    lines: 1,
+    total: 58.0,
+    status: "Draft",
+  },
+  {
+    id: "CLM-0150",
+    title: "Printer toner and stationery",
+    date: "2026-11-07",
+    lines: 3,
+    total: 46.85,
+    status: "Submitted",
+  },
+  {
+    id: "CLM-0148",
+    title: "Lisbon client workshop",
+    date: "2026-11-06",
+    lines: 3,
+    total: 842.3,
+    status: "Submitted",
+  },
+  {
+    id: "CLM-0146",
+    title: "Manchester supplier visit",
+    date: "2026-11-04",
+    lines: 2,
+    total: 184.6,
+    status: "Draft",
+    returned: "Marcus Bell: please attach the hotel receipt for 2 Nov, then resubmit.",
+  },
+  {
+    id: "CLM-0144",
+    title: "Team lunch — Q4 planning",
+    date: "2026-11-03",
+    lines: 1,
+    total: 126.4,
+    status: "Manager approved",
+  },
+  {
+    id: "CLM-0139",
+    title: "Standing desk and monitor arm",
+    date: "2026-10-29",
+    lines: 2,
+    total: 389.98,
+    status: "Approved",
+  },
+  {
+    id: "CLM-0136",
+    title: "Train to Leeds — Northern roadshow",
+    date: "2026-10-24",
+    lines: 4,
+    total: 231.15,
+    status: "Paid",
+  },
+  {
+    id: "CLM-0131",
+    title: "Conference ticket — Product Summit",
+    date: "2026-10-17",
+    lines: 1,
+    total: 495.0,
+    status: "Paid",
+  },
+  {
+    id: "CLM-0129",
+    title: "Client dinner — Halden account",
+    date: "2026-10-14",
+    lines: 1,
+    total: 168.75,
+    status: "Approved",
+  },
+  {
+    id: "CLM-0124",
+    title: "Taxi receipts, October",
+    date: "2026-10-09",
+    lines: 5,
+    total: 97.2,
+    status: "Paid",
+  },
+  {
+    id: "CLM-0120",
+    title: "USB-C dock for home office",
+    date: "2026-10-02",
+    lines: 1,
+    total: 74.99,
+    status: "Manager approved",
+  },
+  {
+    id: "CLM-0112",
+    title: "Airport transfers — Edinburgh",
+    date: "2026-09-26",
+    lines: 2,
+    total: 112.4,
+    status: "Paid",
+  },
 ];
 
-const TABS = ['All', 'Draft', 'Submitted', 'Manager approved', 'Approved', 'Paid'];
+const TABS = ["All", "Draft", "Submitted", "Manager approved", "Approved", "Paid"];
 
-const gbp = (n) => new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(n);
+const gbp = (n) => new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" }).format(n);
 const fmtDate = (iso) =>
-  new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }).format(new Date(iso + 'T00:00:00Z'));
+  new Intl.DateTimeFormat("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(iso + "T00:00:00Z"));
 
 export default function Screen() {
   const navigate = useNavigate();
-  const [active, setActive] = React.useState('All');
+  const [active, setActive] = React.useState("All");
   const [loading, setLoading] = React.useState(true);
   const [claims] = React.useState(CLAIMS);
   const tabRefs = React.useRef([]);
@@ -45,32 +148,73 @@ export default function Screen() {
     return () => clearTimeout(t);
   }, []);
 
-  const countFor = (s) => (s === 'All' ? claims.length : claims.filter((c) => c.status === s).length);
+  const countFor = (s) =>
+    s === "All" ? claims.length : claims.filter((c) => c.status === s).length;
   const rows = claims
-    .filter((c) => active === 'All' || c.status === active)
+    .filter((c) => active === "All" || c.status === active)
     .slice()
     .sort((a, b) => (a.date < b.date ? 1 : -1));
   const inReview = claims
-    .filter((c) => c.status === 'Submitted' || c.status === 'Manager approved')
+    .filter((c) => c.status === "Submitted" || c.status === "Manager approved")
     .reduce((s, c) => s + c.total, 0);
-  const inReviewCount = claims.filter((c) => c.status === 'Submitted' || c.status === 'Manager approved').length;
+  const inReviewCount = claims.filter(
+    (c) => c.status === "Submitted" || c.status === "Manager approved",
+  ).length;
 
   const glow = (c, p) => `color-mix(in srgb, ${c} ${p}%, transparent)`;
   const gradient = `linear-gradient(120deg, ${brand.primaryColor}, ${brand.accentColor})`;
 
   const statusMeta = {
-    Draft: { icon: Edit, style: { color: brand.neutralColor, border: `1px solid ${glow(brand.neutralColor, 55)}`, background: 'transparent' } },
-    Submitted: { icon: Clock, style: { color: brand.primaryColor, border: `1px solid ${glow(brand.primaryColor, 60)}`, background: glow(brand.primaryColor, 10) } },
-    'Manager approved': { icon: Check, style: { color: brand.accentColor, border: `1px solid ${glow(brand.accentColor, 60)}`, background: glow(brand.accentColor, 12) } },
-    Approved: { icon: CheckCircle, style: { color: brand.backgroundColor, border: `1px solid ${brand.primaryColor}`, background: brand.primaryColor } },
-    Paid: { icon: CheckCircle, style: { color: brand.backgroundColor, border: `1px solid ${brand.accentColor}`, background: brand.accentColor } },
+    Draft: {
+      icon: Edit,
+      style: {
+        color: brand.neutralColor,
+        border: `1px solid ${glow(brand.neutralColor, 55)}`,
+        background: "transparent",
+      },
+    },
+    Submitted: {
+      icon: Clock,
+      style: {
+        color: brand.primaryColor,
+        border: `1px solid ${glow(brand.primaryColor, 60)}`,
+        background: glow(brand.primaryColor, 10),
+      },
+    },
+    "Manager approved": {
+      icon: Check,
+      style: {
+        color: brand.accentColor,
+        border: `1px solid ${glow(brand.accentColor, 60)}`,
+        background: glow(brand.accentColor, 12),
+      },
+    },
+    Approved: {
+      icon: CheckCircle,
+      style: {
+        color: brand.backgroundColor,
+        border: `1px solid ${brand.primaryColor}`,
+        background: brand.primaryColor,
+      },
+    },
+    Paid: {
+      icon: CheckCircle,
+      style: {
+        color: brand.backgroundColor,
+        border: `1px solid ${brand.accentColor}`,
+        background: brand.accentColor,
+      },
+    },
   };
 
   const StatusPill = ({ status }) => {
     const m = statusMeta[status];
     const I = m.icon;
     return (
-      <span className="inline-flex items-center gap-2 whitespace-nowrap rounded-full px-3 py-1 text-xs font-semibold" style={m.style}>
+      <span
+        className="inline-flex items-center gap-2 whitespace-nowrap rounded-full px-3 py-1 text-xs font-semibold"
+        style={m.style}
+      >
         <I className="h-3 w-3" aria-hidden="true" />
         {status}
       </span>
@@ -79,10 +223,10 @@ export default function Screen() {
 
   const onTabKey = (e, i) => {
     let n = null;
-    if (e.key === 'ArrowRight') n = (i + 1) % TABS.length;
-    if (e.key === 'ArrowLeft') n = (i - 1 + TABS.length) % TABS.length;
-    if (e.key === 'Home') n = 0;
-    if (e.key === 'End') n = TABS.length - 1;
+    if (e.key === "ArrowRight") n = (i + 1) % TABS.length;
+    if (e.key === "ArrowLeft") n = (i - 1 + TABS.length) % TABS.length;
+    if (e.key === "Home") n = 0;
+    if (e.key === "End") n = TABS.length - 1;
     if (n !== null) {
       e.preventDefault();
       setActive(TABS[n]);
@@ -90,17 +234,17 @@ export default function Screen() {
     }
   };
 
-  const open = () => navigate('claim-detail');
+  const open = () => navigate("claim-detail");
 
   return (
     <div
       className="relative w-full overflow-hidden"
       style={{
         fontFamily: brand.fontBody,
-        color: 'white',
+        color: "white",
         background: brand.backgroundColor,
         backgroundImage: `radial-gradient(60rem 28rem at 8% -10%, ${glow(brand.accentColor, 22)}, transparent 70%), radial-gradient(50rem 26rem at 100% 0%, ${glow(brand.primaryColor, 18)}, transparent 70%)`,
-        minHeight: '100%',
+        minHeight: "100%",
       }}
     >
       <style>{`
@@ -128,32 +272,44 @@ export default function Screen() {
         {/* Row 1 */}
         <div className="grid grid-cols-12 items-end gap-4">
           <div className="col-span-12 md:col-span-8">
-            <p className="mb-2 text-xs font-semibold uppercase" style={{ color: brand.neutralColor, letterSpacing: '0.14em' }}>
+            <p
+              className="mb-2 text-xs font-semibold uppercase"
+              style={{ color: brand.neutralColor, letterSpacing: "0.14em" }}
+            >
               Expense claims · only yours
             </p>
             <h1
               data-wf="b-0-0"
               className="font-extrabold"
-              style={{ fontFamily: brand.fontHeading, fontSize: 'clamp(2.25rem, 5vw, 3.5rem)', lineHeight: 1.05, letterSpacing: '-0.02em' }}
+              style={{
+                fontFamily: brand.fontHeading,
+                fontSize: "clamp(2.25rem, 5vw, 3.5rem)",
+                lineHeight: 1.05,
+                letterSpacing: "-0.02em",
+              }}
             >
               My claims
             </h1>
-            <p className="mt-3 text-base" style={{ color: brand.neutralColor, fontVariantNumeric: 'tabular-nums' }}>
-              <span className="font-bold text-white">{gbp(inReview)}</span> across {inReviewCount} claims waiting on a decision.
+            <p
+              className="mt-3 text-base"
+              style={{ color: brand.neutralColor, fontVariantNumeric: "tabular-nums" }}
+            >
+              <span className="font-bold text-white">{gbp(inReview)}</span> across {inReviewCount}{" "}
+              claims waiting on a decision.
             </p>
           </div>
           <div className="col-span-12 flex md:col-span-4 md:justify-end">
             <Button
               data-wf="b-0-1"
-              onClick={() => navigate('claim-edit')}
+              onClick={() => navigate("claim-edit")}
               className="mc-cta mc-focus inline-flex items-center justify-center gap-2 font-bold"
               style={{
                 background: gradient,
                 color: brand.backgroundColor,
                 borderRadius: brand.radius,
-                padding: '14px 24px',
+                padding: "14px 24px",
                 minHeight: 48,
-                border: 'none',
+                border: "none",
                 boxShadow: `0 8px 40px ${glow(brand.accentColor, 40)}`,
               }}
             >
@@ -183,21 +339,21 @@ export default function Screen() {
                   className="mc-tab mc-focus inline-flex items-center gap-2 rounded-full px-4 text-sm font-semibold"
                   style={{
                     minHeight: 44,
-                    background: on ? gradient : 'rgba(255,255,255,.06)',
+                    background: on ? gradient : "rgba(255,255,255,.06)",
                     color: on ? brand.backgroundColor : brand.neutralColor,
-                    border: on ? '1px solid transparent' : '1px solid rgba(255,255,255,.14)',
-                    boxShadow: on ? `0 6px 32px ${glow(brand.accentColor, 40)}` : 'none',
+                    border: on ? "1px solid transparent" : "1px solid rgba(255,255,255,.14)",
+                    boxShadow: on ? `0 6px 32px ${glow(brand.accentColor, 40)}` : "none",
                   }}
                 >
                   {t}
                   <span
                     className="rounded-full px-2 text-xs"
                     style={{
-                      fontVariantNumeric: 'tabular-nums',
-                      background: on ? glow(brand.backgroundColor, 18) : 'rgba(255,255,255,.08)',
+                      fontVariantNumeric: "tabular-nums",
+                      background: on ? glow(brand.backgroundColor, 18) : "rgba(255,255,255,.08)",
                     }}
                   >
-                    {loading ? '–' : countFor(t)}
+                    {loading ? "–" : countFor(t)}
                   </span>
                 </button>
               );
@@ -214,11 +370,11 @@ export default function Screen() {
           aria-busy={loading}
           className="mt-6 overflow-hidden"
           style={{
-            background: 'rgba(255,255,255,.07)',
-            border: '1px solid rgba(255,255,255,.14)',
+            background: "rgba(255,255,255,.07)",
+            border: "1px solid rgba(255,255,255,.14)",
             borderRadius: brand.radius,
-            backdropFilter: 'blur(18px)',
-            WebkitBackdropFilter: 'blur(18px)',
+            backdropFilter: "blur(18px)",
+            WebkitBackdropFilter: "blur(18px)",
             boxShadow: `0 24px 80px ${glow(brand.primaryColor, 14)}`,
           }}
         >
@@ -228,7 +384,17 @@ export default function Screen() {
                 title="No claims yet"
                 description="Start with one receipt. Add lines for each expense, attach receipts, and submit when it's ready for your manager."
                 action={
-                  <Button onClick={() => navigate('claim-edit')} className="mc-focus" style={{ background: gradient, color: brand.backgroundColor, borderRadius: brand.radius, border: 'none', padding: '12px 20px' }}>
+                  <Button
+                    onClick={() => navigate("claim-edit")}
+                    className="mc-focus"
+                    style={{
+                      background: gradient,
+                      color: brand.backgroundColor,
+                      borderRadius: brand.radius,
+                      border: "none",
+                      padding: "12px 20px",
+                    }}
+                  >
                     Start your first claim
                   </Button>
                 }
@@ -236,10 +402,17 @@ export default function Screen() {
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <Table className="w-full" style={{ fontVariantNumeric: 'tabular-nums', borderCollapse: 'collapse', minWidth: 640 }}>
+              <Table
+                className="w-full"
+                style={{
+                  fontVariantNumeric: "tabular-nums",
+                  borderCollapse: "collapse",
+                  minWidth: 640,
+                }}
+              >
                 <THead>
                   <TR>
-                    {['Title', 'Date', 'Total (GBP)', 'Status'].map((h, i) => (
+                    {["Title", "Date", "Total (GBP)", "Status"].map((h, i) => (
                       <TH
                         key={h}
                         data-wf={`i-2-0-${i}`}
@@ -247,10 +420,10 @@ export default function Screen() {
                         className="px-5 py-4 text-xs font-semibold uppercase"
                         style={{
                           color: brand.neutralColor,
-                          letterSpacing: '0.1em',
-                          textAlign: i === 2 ? 'right' : 'left',
-                          borderBottom: '1px solid rgba(255,255,255,.14)',
-                          whiteSpace: 'nowrap',
+                          letterSpacing: "0.1em",
+                          textAlign: i === 2 ? "right" : "left",
+                          borderBottom: "1px solid rgba(255,255,255,.14)",
+                          whiteSpace: "nowrap",
                         }}
                       >
                         {h}
@@ -262,10 +435,18 @@ export default function Screen() {
                   {loading &&
                     [0, 1, 2, 3, 4].map((k) => (
                       <TR key={k} aria-hidden="true">
-                        <TD className="px-5 py-5"><div className="mc-skel h-4" style={{ width: `${60 - k * 5}%` }} /></TD>
-                        <TD className="px-5 py-5"><div className="mc-skel h-4 w-24" /></TD>
-                        <TD className="px-5 py-5"><div className="mc-skel ml-auto h-4 w-16" /></TD>
-                        <TD className="px-5 py-5"><div className="mc-skel h-6 w-28 rounded-full" /></TD>
+                        <TD className="px-5 py-5">
+                          <div className="mc-skel h-4" style={{ width: `${60 - k * 5}%` }} />
+                        </TD>
+                        <TD className="px-5 py-5">
+                          <div className="mc-skel h-4 w-24" />
+                        </TD>
+                        <TD className="px-5 py-5">
+                          <div className="mc-skel ml-auto h-4 w-16" />
+                        </TD>
+                        <TD className="px-5 py-5">
+                          <div className="mc-skel h-6 w-28 rounded-full" />
+                        </TD>
                       </TR>
                     ))}
                   {!loading &&
@@ -276,35 +457,60 @@ export default function Screen() {
                         className="mc-row"
                         style={{ animationDelay: `${Math.min(idx, 8) * 30}ms` }}
                       >
-                        <TD className="px-5 py-4" style={{ borderTop: '1px solid rgba(255,255,255,.1)', maxWidth: 380 }}>
+                        <TD
+                          className="px-5 py-4"
+                          style={{ borderTop: "1px solid rgba(255,255,255,.1)", maxWidth: 380 }}
+                        >
                           <button
                             type="button"
-                            onClick={(e) => { e.stopPropagation(); open(); }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              open();
+                            }}
                             className="mc-focus rounded text-left text-base font-bold text-white"
-                            style={{ background: 'none', border: 'none', padding: 0 }}
+                            style={{ background: "none", border: "none", padding: 0 }}
                           >
                             {c.title}
                           </button>
                           <div className="mt-1 text-xs" style={{ color: brand.neutralColor }}>
-                            {c.id} · {c.lines} {c.lines === 1 ? 'line' : 'lines'}
+                            {c.id} · {c.lines} {c.lines === 1 ? "line" : "lines"}
                           </div>
                           {c.returned && (
-                            <div className="mt-2 inline-flex items-start gap-2 text-xs" style={{ color: brand.accentColor }}>
+                            <div
+                              className="mt-2 inline-flex items-start gap-2 text-xs"
+                              style={{ color: brand.accentColor }}
+                            >
                               <AlertCircle className="mt-0.5 h-3 w-3 shrink-0" aria-hidden="true" />
                               <span>Returned to you — {c.returned}</span>
                             </div>
                           )}
                         </TD>
-                        <TD className="whitespace-nowrap px-5 py-4 text-sm" style={{ borderTop: '1px solid rgba(255,255,255,.1)', color: brand.neutralColor }}>
+                        <TD
+                          className="whitespace-nowrap px-5 py-4 text-sm"
+                          style={{
+                            borderTop: "1px solid rgba(255,255,255,.1)",
+                            color: brand.neutralColor,
+                          }}
+                        >
                           {fmtDate(c.date)}
                         </TD>
-                        <TD className="whitespace-nowrap px-5 py-4 text-right text-lg font-bold" style={{ borderTop: '1px solid rgba(255,255,255,.1)' }}>
+                        <TD
+                          className="whitespace-nowrap px-5 py-4 text-right text-lg font-bold"
+                          style={{ borderTop: "1px solid rgba(255,255,255,.1)" }}
+                        >
                           {gbp(c.total)}
                         </TD>
-                        <TD className="px-5 py-4" style={{ borderTop: '1px solid rgba(255,255,255,.1)' }}>
+                        <TD
+                          className="px-5 py-4"
+                          style={{ borderTop: "1px solid rgba(255,255,255,.1)" }}
+                        >
                           <div className="flex items-center justify-between gap-3">
                             <StatusPill status={c.status} />
-                            <ChevronRight className="mc-chev h-4 w-4" aria-hidden="true" style={{ color: brand.neutralColor }} />
+                            <ChevronRight
+                              className="mc-chev h-4 w-4"
+                              aria-hidden="true"
+                              style={{ color: brand.neutralColor }}
+                            />
                           </div>
                         </TD>
                       </TR>
@@ -316,8 +522,8 @@ export default function Screen() {
                   <Empty
                     title={`Nothing in ${active} right now`}
                     description={
-                      active === 'Draft'
-                        ? 'Every claim you have has been submitted. Start a new one when you next spend.'
+                      active === "Draft"
+                        ? "Every claim you have has been submitted. Start a new one when you next spend."
                         : `None of your claims are ${active.toLowerCase()} at the moment. Switch to All to see everything you've claimed.`
                     }
                   />
@@ -328,7 +534,9 @@ export default function Screen() {
         </div>
 
         <p className="mt-4 text-xs" style={{ color: brand.neutralColor }} aria-live="polite">
-          {loading ? 'Loading your claims…' : `Showing ${rows.length} of ${claims.length} claims. You only ever see claims you own.`}
+          {loading
+            ? "Loading your claims…"
+            : `Showing ${rows.length} of ${claims.length} claims. You only ever see claims you own.`}
         </p>
       </div>
     </div>

@@ -4,5 +4,12 @@ target-version = "py312"
 [lint]
 select = ["E", "F", "I", "B", "UP"]
 
+[lint.per-file-ignores]
+# The app description is the approved product brief, generated as one long string.
+"app/main.py" = ["E501"]
+
 [format]
 quote-style = "double"
+
+[lint.flake8-bugbear]
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Security"]

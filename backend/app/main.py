@@ -6,29 +6,36 @@ is a stub that returns a typed placeholder, so the service starts, serves its
 OpenAPI document and passes its tests before a single handler is implemented.
 """
 
+import logging
 import os
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.encoders import jsonable_encoder
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from app import models  # noqa: F401 -- imported so the tables register before create_all
-from app.database import Base, engine
+from app.database import SessionLocal
+from app.routers import auth
+from app.security import RedactFilter, seed_admin
+
+for _name in ("", "uvicorn", "uvicorn.error", "uvicorn.access"):
+    logging.getLogger(_name).addFilter(RedactFilter())
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
-    """The scaffold ships no migrations, so the tables are created from the models
-    when the application starts. Replace this with Alembic before anything holds data
-    worth keeping.
+    """Startup hook. The schema is changed only through Alembic migrations
+    (`alembic upgrade head`, run before the server starts), never created here.
 
     This runs on startup and not at import, so importing the application never opens a
-    connection. A test can therefore point `get_db` at a database of its own, and a
-    deployment whose `DATABASE_URL` names a server that is not up fails where you can
-    read the error, not while pytest collects the files.
+    connection and a test can point `get_db` at a database of its own.
     """
-    Base.metadata.create_all(bind=engine)
+    with SessionLocal() as db:
+        seed_admin(db)
     yield
 
 
@@ -58,3 +65,13 @@ app.add_middleware(
 async def health() -> dict[str, str]:
     """Liveness probe, and the only route here that is not a stub."""
     return {"status": "ok"}
+
+
+app.include_router(auth.router)
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_error(request: Request, exc: RequestValidationError) -> JSONResponse:
+    """422 without echoing the submitted input (it may hold a password)."""
+    errors = [{k: v for k, v in e.items() if k not in ("input", "ctx")} for e in exc.errors()]
+    return JSONResponse(status_code=422, content={"detail": jsonable_encoder(errors)})

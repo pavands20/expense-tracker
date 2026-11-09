@@ -11,8 +11,7 @@
 // The generated screens do NOT use this yet -- they render seeded sample data, exactly as
 // they were approved. This is the seam to replace that with real calls, one screen at a
 // time.
-export const API_BASE_URL: string =
-  import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000";
+export const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000";
 
 // The shared bearer the deployed API expects (its SECRET_KEY). The platform bakes the
 // same value into both sides at deploy time, so authenticated calls work out of the box.
@@ -28,7 +27,7 @@ const SESSION_TOKEN_KEY = "session_token";
 
 export function getSessionToken(): string | null {
   try {
-    return localStorage.getItem(SESSION_TOKEN_KEY);
+    return sessionStorage.getItem(SESSION_TOKEN_KEY);
   } catch {
     return null;
   }
@@ -36,7 +35,7 @@ export function getSessionToken(): string | null {
 
 export function setSessionToken(token: string): void {
   try {
-    localStorage.setItem(SESSION_TOKEN_KEY, token);
+    sessionStorage.setItem(SESSION_TOKEN_KEY, token);
   } catch {
     // Storage unavailable (private mode, quota): the session just won't persist.
   }
@@ -44,10 +43,25 @@ export function setSessionToken(token: string): void {
 
 export function clearSessionToken(): void {
   try {
-    localStorage.removeItem(SESSION_TOKEN_KEY);
+    sessionStorage.removeItem(SESSION_TOKEN_KEY);
   } catch {
     // Nothing to clear if storage was never reachable.
   }
+}
+
+export class ApiError extends Error {
+  status: number;
+  detail: unknown;
+  constructor(message: string, status: number, detail: unknown) {
+    super(message);
+    this.status = status;
+    this.detail = detail;
+  }
+}
+
+let unauthorizedListener: (() => void) | null = null;
+export function onUnauthorized(listener: (() => void) | null): void {
+  unauthorizedListener = listener;
 }
 
 export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
@@ -64,7 +78,21 @@ export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> 
     },
   });
   if (!response.ok) {
-    throw new Error(`${init?.method ?? "GET"} ${path} failed: ${response.status}`);
+    let detail: unknown = null;
+    try {
+      detail = ((await response.json()) as { detail?: unknown }).detail ?? null;
+    } catch {
+      // Body absent or not JSON.
+    }
+    if (response.status === 401 && path !== "/auth/login") {
+      clearSessionToken();
+      unauthorizedListener?.();
+    }
+    throw new ApiError(
+      `${init?.method ?? "GET"} ${path} failed: ${response.status}`,
+      response.status,
+      detail,
+    );
   }
   return response.status === 204 ? (undefined as T) : ((await response.json()) as T);
 }
