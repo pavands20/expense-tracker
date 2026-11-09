@@ -7,7 +7,40 @@ _No routes found._
 <!-- sdlc:auto:end endpoints -->
 
 <!-- sdlc:auto:start drift -->
-_Code matches the designed API._
+**Designed but missing:**
+
+- DELETE /claims/{id}
+- DELETE /claims/{id}/lines/{line_id}
+- DELETE /claims/{id}/lines/{line_id}/receipt
+- GET /approvals/queue
+- GET /auth/me
+- GET /categories
+- GET /claims
+- GET /claims/{id}
+- GET /claims/{id}/lines/{line_id}/receipt-url
+- GET /dashboard/me
+- GET /reports/approved-claims.csv
+- GET /reports/finance-totals
+- GET /users
+- PATCH /categories/{id}
+- PATCH /claims/{id}
+- PATCH /claims/{id}/lines/{line_id}
+- PATCH /users/{id}
+- POST /auth/login
+- POST /auth/logout
+- POST /auth/password-reset/confirm
+- POST /auth/password-reset/request
+- POST /categories
+- POST /claims
+- POST /claims/{id}/finance-decision
+- POST /claims/{id}/lines
+- POST /claims/{id}/manager-decision
+- POST /claims/{id}/mark-paid
+- POST /claims/{id}/submit
+- POST /users
+- POST /users/{id}/deactivate
+- POST /users/{id}/reactivate
+- PUT /claims/{id}/lines/{line_id}/receipt
 <!-- sdlc:auto:end drift -->
 
 <!-- sdlc:auto:start source -->

@@ -2,6 +2,840 @@
 openapi: 3.1.0
 info:
   title: Expense Tracker
-  version: architecture-v0
+  version: architecture-v1
   description: Designed API from the approved architecture (not extracted from code).
-paths: {}
+paths:
+  /approvals/queue:
+    get:
+      summary: A Manager sees the Submitted claims of direct reports, excluding their
+        own. Finance sees Manager approved and Approved c
+      description: A Manager sees the Submitted claims of direct reports, excluding
+        their own. Finance sees Manager approved and Approved claims, excluding their
+        own.
+      operationId: get_approvals_queue
+      parameters: []
+      responses:
+        '200':
+          description: '[{id, owner_name, total_amount, status, has_over_limit}]'
+      security:
+      - bearerAuth: []
+  /auth/login:
+    post:
+      summary: Sign in. Returns a generic 401 on any failure.
+      description: Sign in. Returns a generic 401 on any failure.
+      operationId: post_auth_login
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: '{email, password}'
+      responses:
+        '200':
+          description: '{token, expires_at, user:{id, full_name, email, role}}'
+  /auth/logout:
+    post:
+      summary: Revoke the current session.
+      description: Revoke the current session.
+      operationId: post_auth_logout
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: '-'
+      responses:
+        '200':
+          description: '204'
+      security:
+      - bearerAuth: []
+  /auth/me:
+    get:
+      summary: Current user and role, used by the SPA to choose screens.
+      description: Current user and role, used by the SPA to choose screens.
+      operationId: get_auth_me
+      parameters: []
+      responses:
+        '200':
+          description: '{id, full_name, email, role, manager_id}'
+      security:
+      - bearerAuth: []
+  /auth/password-reset/confirm:
+    post:
+      summary: Set a new password with a single-use token.
+      description: Set a new password with a single-use token.
+      operationId: post_auth_password_reset_confirm
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: '{token, new_password}'
+      responses:
+        '200':
+          description: 204 | 400
+      security:
+      - bearerAuth: []
+  /auth/password-reset/request:
+    post:
+      summary: Request a reset email. Always returns the same neutral response.
+      description: Request a reset email. Always returns the same neutral response.
+      operationId: post_auth_password_reset_request
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: '{email}'
+      responses:
+        '200':
+          description: 202 {message}
+  /categories:
+    get:
+      summary: List categories. Active ones only unless include_inactive is set (Finance).
+      description: List categories. Active ones only unless include_inactive is set
+        (Finance).
+      operationId: get_categories
+      parameters: []
+      responses:
+        '200':
+          description: '[{id, name, per_line_limit, is_active}]'
+      security:
+      - bearerAuth: []
+    post:
+      summary: Add a category with an optional per-line limit.
+      description: Add a category with an optional per-line limit.
+      operationId: post_categories
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: '{name, per_line_limit?}'
+      responses:
+        '200':
+          description: 201 category
+      security:
+      - bearerAuth: []
+  /categories/{id}:
+    patch:
+      summary: Rename, set or clear the limit, or deactivate or reactivate.
+      description: Rename, set or clear the limit, or deactivate or reactivate.
+      operationId: patch_categories_id
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: '{name?, per_line_limit?|null, is_active?}'
+      responses:
+        '200':
+          description: 200 category
+      security:
+      - bearerAuth: []
+  /claims:
+    get:
+      summary: List visible claims. scope=mine|team|all is limited by role.
+      description: List visible claims. scope=mine|team|all is limited by role.
+      operationId: get_claims
+      parameters: []
+      responses:
+        '200':
+          description: '[{id, owner_name, created_at, submitted_at, total_amount,
+            status}]'
+      security:
+      - bearerAuth: []
+    post:
+      summary: Create a draft claim, optionally with lines.
+      description: Create a draft claim, optionally with lines.
+      operationId: post_claims
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: '{title?, lines?:[{line_date, category_id, amount, description}]}'
+      responses:
+        '200':
+          description: 201 claim detail
+      security:
+      - bearerAuth: []
+  /claims/{id}:
+    get:
+      summary: Claim detail with lines, over-limit flags with the limit, receipt presence,
+        decision history and last rejection comment.
+      description: Claim detail with lines, over-limit flags with the limit, receipt
+        presence, decision history and last rejection comment. Returns 404 if not
+        visible.
+      operationId: get_claims_id
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: '{claim, lines:[{..., over_limit, category_limit, has_receipt}],
+            decisions:[{step, decision, actor_name, comment, created_at}]}'
+      security:
+      - bearerAuth: []
+    patch:
+      summary: Update the title of a draft owned by the caller.
+      description: Update the title of a draft owned by the caller.
+      operationId: patch_claims_id
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: '{title}'
+      responses:
+        '200':
+          description: 200 claim
+      security:
+      - bearerAuth: []
+    delete:
+      summary: Delete own draft and its receipts.
+      description: Delete own draft and its receipts.
+      operationId: delete_claims_id
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: 204 | 409 if not draft
+      security:
+      - bearerAuth: []
+  /claims/{id}/finance-decision:
+    post:
+      summary: Step 2 approve or reject. The claim must be Manager approved and the
+        caller must be a Finance user who is not the owner.
+      description: Step 2 approve or reject. The claim must be Manager approved and
+        the caller must be a Finance user who is not the owner.
+      operationId: post_claims_id_finance_decision
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: '{decision: approve|reject, comment}'
+      responses:
+        '200':
+          description: 200 claim | 403 | 409 | 422
+      security:
+      - bearerAuth: []
+  /claims/{id}/lines:
+    post:
+      summary: Add a line. Amount must be > 0 with at most 2 decimal places, and the
+        category must be active. Recalculates the total.
+      description: Add a line. Amount must be > 0 with at most 2 decimal places, and
+        the category must be active. Recalculates the total.
+      operationId: post_claims_id_lines
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: '{line_date, category_id, amount, description}'
+      responses:
+        '200':
+          description: 201 claim detail | 422 field errors
+      security:
+      - bearerAuth: []
+  /claims/{id}/lines/{line_id}:
+    patch:
+      summary: Edit a line and recalculate the total.
+      description: Edit a line and recalculate the total.
+      operationId: patch_claims_id_lines_line_id
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: line_id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: '{line_date?, category_id?, amount?, description?}'
+      responses:
+        '200':
+          description: 200 claim detail
+      security:
+      - bearerAuth: []
+    delete:
+      summary: Remove a line and its receipt, then recalculate the total.
+      description: Remove a line and its receipt, then recalculate the total.
+      operationId: delete_claims_id_lines_line_id
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: line_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: 200 claim detail
+      security:
+      - bearerAuth: []
+  /claims/{id}/lines/{line_id}/receipt:
+    put:
+      summary: Attach or replace a receipt. The type is checked by content and must
+        be 5 MB or less.
+      description: Attach or replace a receipt. The type is checked by content and
+        must be 5 MB or less.
+      operationId: put_claims_id_lines_line_id_receipt
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: line_id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: multipart/form-data file
+      responses:
+        '200':
+          description: 200 line | 413 | 415 | 409
+      security:
+      - bearerAuth: []
+    delete:
+      summary: Remove a receipt.
+      description: Remove a receipt.
+      operationId: delete_claims_id_lines_line_id_receipt
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: line_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: '204'
+      security:
+      - bearerAuth: []
+  /claims/{id}/lines/{line_id}/receipt-url:
+    get:
+      summary: Issue a presigned GET link that expires after 300 seconds.
+      description: Issue a presigned GET link that expires after 300 seconds.
+      operationId: get_claims_id_lines_line_id_receipt_url
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: line_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: '{url, expires_at} | 404'
+      security:
+      - bearerAuth: []
+  /claims/{id}/manager-decision:
+    post:
+      summary: Step 1 approve or reject. The caller must be the owner's current manager
+        and not the owner. Reject requires a comment.
+      description: Step 1 approve or reject. The caller must be the owner's current
+        manager and not the owner. Reject requires a comment.
+      operationId: post_claims_id_manager_decision
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: '{decision: approve|reject, comment}'
+      responses:
+        '200':
+          description: 200 claim | 403 | 409 | 422
+      security:
+      - bearerAuth: []
+  /claims/{id}/mark-paid:
+    post:
+      summary: 'Approved becomes Paid, recording the date and the actor. The caller
+        must be a Finance user who is not the owner. Status '
+      description: Approved becomes Paid, recording the date and the actor. The caller
+        must be a Finance user who is not the owner. Status change only, no money
+        moves.
+      operationId: post_claims_id_mark_paid
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: '-'
+      responses:
+        '200':
+          description: 200 claim | 403 | 409
+      security:
+      - bearerAuth: []
+  /claims/{id}/submit:
+    post:
+      summary: Submit a draft with at least one line, which locks it and routes it
+        to the owner's assigned manager.
+      description: Submit a draft with at least one line, which locks it and routes
+        it to the owner's assigned manager.
+      operationId: post_claims_id_submit
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: '-'
+      responses:
+        '200':
+          description: 200 claim | 409 | 422 no lines
+      security:
+      - bearerAuth: []
+  /dashboard/me:
+    get:
+      summary: Count and GBP total per status for the caller's own claims.
+      description: Count and GBP total per status for the caller's own claims.
+      operationId: get_dashboard_me
+      parameters: []
+      responses:
+        '200':
+          description: '[{status, count, total_amount}] (all five statuses, zero-filled)'
+      security:
+      - bearerAuth: []
+  /health:
+    get:
+      summary: Liveness check for the load balancer.
+      description: Liveness check for the load balancer.
+      operationId: get_health
+      parameters: []
+      responses:
+        '200':
+          description: '{status: ok}'
+  /reports/approved-claims.csv:
+    get:
+      summary: CSV with one row per line for Finance-approved claims (Approved or
+        Paid) whose line_date is in the range. Returns header
+      description: CSV with one row per line for Finance-approved claims (Approved
+        or Paid) whose line_date is in the range. Returns headers only if nothing
+        matches.
+      operationId: get_reports_approved_claims_csv
+      parameters: []
+      responses:
+        '200':
+          description: 'text/csv: claim_id, line_id, category, amount_gbp, employee,
+            line_date'
+      security:
+      - bearerAuth: []
+  /reports/finance-totals:
+    get:
+      summary: GBP totals by category and month of line date, for Approved and Paid
+        claims only.
+      description: GBP totals by category and month of line date, for Approved and
+        Paid claims only.
+      operationId: get_reports_finance_totals
+      parameters: []
+      responses:
+        '200':
+          description: '[{month, category, total_amount}]'
+      security:
+      - bearerAuth: []
+  /users:
+    get:
+      summary: List users with role, manager and active state. Supports a ?active
+        filter.
+      description: List users with role, manager and active state. Supports a ?active
+        filter.
+      operationId: get_users
+      parameters: []
+      responses:
+        '200':
+          description: '[{id, full_name, email, role, manager_id, manager_name, is_active}]'
+      security:
+      - bearerAuth: []
+    post:
+      summary: 'Create a user with an initial password. Returns 409 if the email is
+        already in use, and 422 if the user is set as their '
+      description: Create a user with an initial password. Returns 409 if the email
+        is already in use, and 422 if the user is set as their own manager.
+      operationId: post_users
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: '{full_name, email, role, manager_id, initial_password}'
+      responses:
+        '200':
+          description: 201 user (no password or hash)
+      security:
+      - bearerAuth: []
+  /users/{id}:
+    patch:
+      summary: Change name, role or assigned manager. Self-management and manager
+        cycles are rejected.
+      description: Change name, role or assigned manager. Self-management and manager
+        cycles are rejected.
+      operationId: patch_users_id
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: '{full_name?, role?, manager_id?}'
+      responses:
+        '200':
+          description: 200 user
+      security:
+      - bearerAuth: []
+  /users/{id}/deactivate:
+    post:
+      summary: Deactivate the user and revoke all of their sessions.
+      description: Deactivate the user and revoke all of their sessions.
+      operationId: post_users_id_deactivate
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: '-'
+      responses:
+        '200':
+          description: 200 user
+      security:
+      - bearerAuth: []
+  /users/{id}/reactivate:
+    post:
+      summary: Reactivate the user.
+      description: Reactivate the user.
+      operationId: post_users_id_reactivate
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: '-'
+      responses:
+        '200':
+          description: 200 user
+      security:
+      - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  schemas:
+    users:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+        full_name:
+          type: string
+        role:
+          type: string
+        manager_id:
+          type: string
+          format: uuid
+        password_hash:
+          type: string
+        is_active:
+          type: boolean
+        deactivated_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+      - id
+      - email
+      - full_name
+      - role
+      - password_hash
+      - is_active
+      - created_at
+      - updated_at
+    sessions:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        token_hash:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        last_seen_at:
+          type: string
+          format: date-time
+        expires_at:
+          type: string
+          format: date-time
+        revoked_at:
+          type: string
+          format: date-time
+      required:
+      - id
+      - user_id
+      - token_hash
+      - created_at
+      - last_seen_at
+      - expires_at
+    password_reset_tokens:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        token_hash:
+          type: string
+        expires_at:
+          type: string
+          format: date-time
+        used_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+      required:
+      - id
+      - user_id
+      - token_hash
+      - expires_at
+      - created_at
+    categories:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        per_line_limit:
+          type: number
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+      required:
+      - id
+      - name
+      - is_active
+      - created_at
+    claims:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        owner_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        status:
+          type: string
+        total_amount:
+          type: number
+        last_rejection_comment:
+          type: string
+        submitted_at:
+          type: string
+          format: date-time
+        paid_at:
+          type: string
+          format: date-time
+        paid_by_id:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+      - id
+      - owner_id
+      - status
+      - total_amount
+      - created_at
+      - updated_at
+    claim_lines:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        claim_id:
+          type: string
+          format: uuid
+        line_date:
+          type: string
+          format: date
+        category_id:
+          type: string
+          format: uuid
+        amount:
+          type: number
+        description:
+          type: string
+        receipt_key:
+          type: string
+        receipt_content_type:
+          type: string
+        receipt_size_bytes:
+          type: integer
+        receipt_filename:
+          type: string
+        position:
+          type: integer
+      required:
+      - id
+      - claim_id
+      - line_date
+      - category_id
+      - amount
+      - description
+      - position
+    claim_decisions:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        claim_id:
+          type: string
+          format: uuid
+        step:
+          type: string
+        decision:
+          type: string
+        actor_id:
+          type: string
+          format: uuid
+        actor_name:
+          type: string
+        comment:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+      required:
+      - id
+      - claim_id
+      - step
+      - decision
+      - actor_id
+      - actor_name
+      - created_at
