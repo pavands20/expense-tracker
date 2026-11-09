@@ -92,7 +92,11 @@ export default function Screen() {
             }}
           >
             {error ? (
-              <p role="alert" className="text-sm font-semibold" style={{ color: brand.accentColor }}>
+              <p
+                role="alert"
+                className="text-sm font-semibold"
+                style={{ color: brand.accentColor }}
+              >
                 {error}
               </p>
             ) : null}

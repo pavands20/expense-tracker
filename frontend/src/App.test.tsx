@@ -31,7 +31,14 @@ describe("App", () => {
     sessionStorage.setItem("session_token", "t");
     sessionStorage.setItem(
       "session_user",
-      JSON.stringify({ id: "1", full_name: "F", email: "f@x.io", role: "Employee", manager_id: null, is_active: true }),
+      JSON.stringify({
+        id: "1",
+        full_name: "F",
+        email: "f@x.io",
+        role: "Employee",
+        manager_id: null,
+        is_active: true,
+      }),
     );
     expect(mod).toBeTruthy();
   });

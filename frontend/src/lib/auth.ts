@@ -1,6 +1,12 @@
 import { useSyncExternalStore } from "react";
 
-import { apiFetch, clearSessionToken, getSessionToken, onUnauthorized, setSessionToken } from "@/lib/api";
+import {
+  apiFetch,
+  clearSessionToken,
+  getSessionToken,
+  onUnauthorized,
+  setSessionToken,
+} from "@/lib/api";
 
 export type Role = "Employee" | "Manager" | "Finance";
 export type User = {

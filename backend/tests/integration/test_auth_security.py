@@ -80,7 +80,9 @@ def test_ac003_nfr002_every_non_public_endpoint_requires_auth(client):
 
 def test_ac004_no_register_route(client):
     paths = client.get("/openapi.json").json()["paths"]
-    bad = [p for p in paths if any(k in p.lower() for k in ("regist", "sign-up", "signup", "sign_up"))]
+    bad = [
+        p for p in paths if any(k in p.lower() for k in ("regist", "sign-up", "signup", "sign_up"))
+    ]
     assert bad == []
 
 
