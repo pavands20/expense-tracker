@@ -3,9 +3,9 @@
 > Maintained by QuorQ AI SDLC. Text between `sdlc:auto` markers is regenerated; anything outside them is yours and is kept.
 
 <!-- sdlc:auto:start summary -->
-34 tests · Passed 28 · Failed 0 · Skipped 0 · Not run 6
+34 tests · Passed 34 · Failed 0 · Skipped 0 · Not run 0
 
-Acceptance criteria covered: 9/89 · passing: 4/89
+Acceptance criteria covered: 9/89 · passing: 9/89
 <!-- sdlc:auto:end summary -->
 
 <!-- sdlc:auto:start tests -->
@@ -41,11 +41,11 @@ Acceptance criteria covered: 9/89 · passing: 4/89
 | AC-008 | test_ac008_session_token_stored_hashed | Integration | Passed | `backend/tests/integration/test_auth_security.py` |
 | AC-009 | test_ac009_nfr003_logs_contain_no_password_or_token | Integration | Passed | `backend/tests/integration/test_auth_security.py` |
 | AC-009 | test_ac009_nfr003_no_secrets_in_auth_responses | Integration | Passed | `backend/tests/integration/test_auth_security.py` |
-| AC-001 | [AC-001] valid sign-in lands on the dashboard | E2E | Not run yet | `frontend/e2e/auth.spec.ts` |
-| AC-002 | [AC-002] invalid credentials show one generic error | E2E | Not run yet | `frontend/e2e/auth.spec.ts` |
-| AC-003 | [AC-003] opening /claims signed out redirects to /sign-in | E2E | Not run yet | `frontend/e2e/auth.spec.ts` |
-| AC-004 | [AC-004] sign-in page has no create-account option | E2E | Not run yet | `frontend/e2e/auth.spec.ts` |
-| AC-005 | [AC-005] Sign out returns to /sign-in and back does not show protected pages | E2E | Not run yet | `frontend/e2e/auth.spec.ts` |
+| AC-001 | [AC-001] valid sign-in lands on the dashboard | E2E | Passed | `frontend/e2e/auth.spec.ts` |
+| AC-002 | [AC-002] invalid credentials show one generic error | E2E | Passed | `frontend/e2e/auth.spec.ts` |
+| AC-003 | [AC-003] opening /claims signed out redirects to /sign-in | E2E | Passed | `frontend/e2e/auth.spec.ts` |
+| AC-004 | [AC-004] sign-in page has no create-account option | E2E | Passed | `frontend/e2e/auth.spec.ts` |
+| AC-005 | [AC-005] Sign out returns to /sign-in and back does not show protected pages | E2E | Passed | `frontend/e2e/auth.spec.ts` |
 
 ## Project setup
 
@@ -53,5 +53,5 @@ Acceptance criteria covered: 9/89 · passing: 4/89
 |---|---|---|---|---|
 | — | test_health_reports_ok | Unit | Passed | `backend/tests/test_health.py` |
 | — | test_the_openapi_document_builds | Unit | Passed | `backend/tests/test_health.py` |
-| — | the app loads | E2E | Not run yet | `frontend/e2e/example.spec.ts` |
+| — | the app loads | E2E | Passed | `frontend/e2e/example.spec.ts` |
 <!-- sdlc:auto:end tests -->
